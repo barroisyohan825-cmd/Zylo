@@ -12,7 +12,10 @@ body{
 }
 body::before{
   content:"";position:fixed;inset:0;z-index:-2;
-  background-image:radial-gradient(circle at 50% 0%,rgba(255,255,255,.10),transparent 28%),radial-gradient(circle at 15% 55%,rgba(255,255,255,.035),transparent 25%),radial-gradient(circle at 85% 45%,rgba(255,255,255,.025),transparent 25%),linear-gradient(145deg,#050505 0%,#111111 45%,#030303 100%);}
+  background-image:radial-gradient(circle at 50% 0%,rgba(255,255,255,.10),transparent 28%),radial-gradient(circle at 15% 55%,rgba(255,255,255,.035),transparent 25%),radial-gradient(circle at 85% 45%,rgba(255,255,255,.025),transparent 25%),linear-gradient(145deg,#050505 0%,#111111 45%,#030303 100%);
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+  filter:saturate(1.15);
+}
 body::after{
   content:"";position:fixed;inset:0;z-index:-1;
   background:radial-gradient(circle at 50% 20%,transparent 0%,rgba(0,0,0,.08) 45%,rgba(0,0,0,.58) 100%);
@@ -234,17 +237,17 @@ const playlistBox = document.getElementById('chillPlaylist');
 const trackList = document.getElementById('trackList');
 const favorite = document.getElementById('favorite');
 
-const chillTracks = [{src:"Chill/Sub Urban - Cradles.mp3",artist:"Sub Urban",title:"Cradles"},{src:"Chill/Julian Mendez - Luigi - Slowed + Reverb 7 Weeks & 3 Days Remix.mp3",artist:"Julian Mendez",title:"Luigi - 7 Weeks & 3 Days (Slowed + Reverb)"},{src:"Chill 2/NyxTheShield - Finale!_.m4a",artist:"NyxTheShield",title:"Finale!"},{src:"Chill/Jiandro, ola.wav - Confess Your Love.mp3",artist:"Jiandro, ola.wav",title:"Confess Your Love"},{src:"Chill/joyful - frog (slowed).mp3",artist:"joyful",title:"frog (slowed)"},{src:"Chill/ptasinski, RJ Pasin - life force.mp3",artist:"ptasinski, RJ Pasin",title:"life force"},{src:"Chill 2/purple drip boy - Assumptions.mp3",artist:"purple drip boy",title:"Assumptions"},{src:"Chill/mikeeysmind - After Dark x Sweater Weather.mp3",artist:"mikeeysmind",title:"After Dark x Sweater Weather"},{src:"Chill 2/The Living Tombstone - My Ordinary Life.mp3",artist:"The Living Tombstone",title:"My Ordinary Life"},{src:"Chill 2/7 weeks & 3 days - Insturmental(1).mp3",artist:"7 weeks & 3 days",title:"Instrumental"},{src:"Chill 2/did i tell u that i miss u.mp3",artist:"Artiste non indiqué",title:"did i tell u that i miss u"}];
+const chillTracks = [{src:"musiques/Chill/Sub Urban - Cradles.mp3",artist:"Sub Urban",title:"Cradles"},{src:"musiques/Chill/Julian Mendez - Luigi - Slowed + Reverb 7 Weeks & 3 Days Remix.mp3",artist:"Julian Mendez",title:"Luigi - 7 Weeks & 3 Days (Slowed + Reverb)"},{src:"musiques/Chill 2/NyxTheShield - Finale!_.m4a",artist:"NyxTheShield",title:"Finale!"},{src:"musiques/Chill/Jiandro, ola.wav - Confess Your Love.mp3",artist:"Jiandro, ola.wav",title:"Confess Your Love"},{src:"musiques/Chill/joyful - frog (slowed).mp3",artist:"joyful",title:"frog (slowed)"},{src:"musiques/Chill/ptasinski, RJ Pasin - life force.mp3",artist:"ptasinski, RJ Pasin",title:"life force"},{src:"musiques/Chill 2/purple drip boy - Assumptions.mp3",artist:"purple drip boy",title:"Assumptions"},{src:"musiques/Chill/mikeeysmind - After Dark x Sweater Weather.mp3",artist:"mikeeysmind",title:"After Dark x Sweater Weather"},{src:"musiques/Chill 2/The Living Tombstone - My Ordinary Life.mp3",artist:"The Living Tombstone",title:"My Ordinary Life"},{src:"musiques/Chill 2/7 weeks & 3 days - Insturmental(1).mp3",artist:"7 weeks & 3 days",title:"Instrumental"},{src:"musiques/Chill 2/did i tell u that i miss u.mp3",artist:"Artiste non indiqué",title:"did i tell u that i miss u"}];
 const energiqueTracks = [
-  {src:"Énergique/AWAKE.mp3",artist:"Artiste non indiqué",title:"AWAKE"},
-  {src:"Énergique/poster boy.mp3",artist:"Artiste non indiqué",title:"poster boy"},
-  {src:"Énergique/DRIFT.mp3",artist:"Artiste non indiqué",title:"DRIFT"},
-  {src:"Énergique/Crush x Burnt Rice - Slowed + Reverb.mp3",artist:"Artiste non indiqué",title:"Crush x Burnt Rice - Slowed + Reverb"},
-  {src:"Énergique/When I Grow Up.mp3",artist:"Artiste non indiqué",title:"When I Grow Up"}
+  {src:"musiques/Énergique/AWAKE.mp3",artist:"Artiste non indiqué",title:"AWAKE"},
+  {src:"musiques/Énergique/poster boy.mp3",artist:"Artiste non indiqué",title:"poster boy"},
+  {src:"musiques/Énergique/DRIFT.mp3",artist:"Artiste non indiqué",title:"DRIFT"},
+  {src:"musiques/Énergique/Crush x Burnt Rice - Slowed + Reverb.mp3",artist:"Artiste non indiqué",title:"Crush x Burnt Rice - Slowed + Reverb"},
+  {src:"musiques/Énergique/When I Grow Up.mp3",artist:"Artiste non indiqué",title:"When I Grow Up"}
 ];
 const rapAnimeTracks = [
-  {src:"Rap Anime/Zoro L'Fr_rot - Yuta.mp3",artist:"Zoro L'Fr_rot",title:"Yuta"},
-  {src:"Rap Anime/Zoro L'Fr_rot - Sung Jin Woo.mp3",artist:"Zoro L'Fr_rot",title:"Sung Jin Woo"}
+  {src:"musiques/Rap Anime/Zoro L'Fr_rot - Yuta.mp3",artist:"Zoro L'Fr_rot",title:"Yuta"},
+  {src:"musiques/Rap Anime/Zoro L'Fr_rot - Sung Jin Woo.mp3",artist:"Zoro L'Fr_rot",title:"Sung Jin Woo"}
 ];
 window.activeTracks = chillTracks;
 window.trackIndex = 0;
