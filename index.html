@@ -283,9 +283,22 @@ async function startAudioPlayback() {
   try {
     await audio.play();
     play.textContent = 'Ⅱ';
+    return;
   } catch (e) {
+    const t = activeTracks[trackIndex];
+    const rawUrl = 'https://raw.githubusercontent.com/barroisyohan825-cmd/Zylo/main/' + t.src.split('/').map(encodeURIComponent).join('/');
+    if (audio.dataset.rawTried !== '1' && rawUrl !== audio.currentSrc) {
+      audio.dataset.rawTried = '1';
+      audio.src = rawUrl;
+      audio.load();
+      try {
+        await audio.play();
+        play.textContent = 'Ⅱ';
+        return;
+      } catch (e2) {}
+    }
     play.textContent = '▶';
-    artist.textContent = 'Impossible de lire ce fichier. Vérifie le dossier « musiques ».';
+    artist.textContent = 'Impossible de lire ce fichier. Vérifie le lien de la musique.';
   }
 }
 function loadTrack(i, autoplay=false) {
@@ -296,10 +309,8 @@ function loadTrack(i, autoplay=false) {
   audio.currentTime = 0;
   progressFill.style.width = '0%';
   timeLabel.textContent = '0:00 / 0:00';
-  const isGithubPages = location.hostname.endsWith('github.io');
-  audio.src = isGithubPages
-    ? 'https://raw.githubusercontent.com/barroisyohan825-cmd/Zylo/main/' + t.src
-    : t.src;
+  audio.dataset.rawTried = '0';
+  audio.src = new URL(t.src, location.href).href;
   audio.load();
   current.textContent = t.title;
   artist.textContent = t.artist + ' • ' + (currentMood || 'Chill');
