@@ -12,10 +12,7 @@ body{
 }
 body::before{
   content:"";position:fixed;inset:0;z-index:-2;
-  background-image:radial-gradient(circle at 50% 0%,rgba(255,255,255,.10),transparent 28%),radial-gradient(circle at 15% 55%,rgba(255,255,255,.035),transparent 25%),radial-gradient(circle at 85% 45%,rgba(255,255,255,.025),transparent 25%),linear-gradient(145deg,#050505 0%,#111111 45%,#030303 100%);;
-  background-size:cover;background-position:center;background-repeat:no-repeat;
-  filter:saturate(1.15);
-}
+  background-image:radial-gradient(circle at 50% 0%,rgba(255,255,255,.10),transparent 28%),radial-gradient(circle at 15% 55%,rgba(255,255,255,.035),transparent 25%),radial-gradient(circle at 85% 45%,rgba(255,255,255,.025),transparent 25%),linear-gradient(145deg,#050505 0%,#111111 45%,#030303 100%);}
 body::after{
   content:"";position:fixed;inset:0;z-index:-1;
   background:radial-gradient(circle at 50% 20%,transparent 0%,rgba(0,0,0,.08) 45%,rgba(0,0,0,.58) 100%);
@@ -187,7 +184,7 @@ html{scroll-behavior:auto;}
     <article class="card" data-mood="Amour"><div class="emoji">❤️</div><h3>Amour</h3><p>Des musiques pleines d'émotions.</p></article>
     <article class="card" data-mood="Focus"><div class="emoji">🌲</div><h3>Focus</h3><p>Reste concentré et avance.</p></article>
     <article class="card" data-mood="Rap Anime"><div class="emoji">🎤</div><h3>Rap Anime</h3><p>Rap français autour des personnages d’anime.</p></article>
-    <article class="card" data-mood="Tendances"><div class="emoji">👑</div><h3>Tendances</h3><p>Ce que tout le monde écoute.</p></article>
+    <article class="card" data-mood="Tendance"><div class="emoji">👑</div><h3>Tendances</h3><p>Ce que tout le monde écoute.</p></article>
   </section>
 
 <div class="player" aria-label="Lecteur musical">
@@ -285,7 +282,7 @@ async function startAudioPlayback() {
     play.textContent = 'Ⅱ';
   } catch (e) {
     play.textContent = '▶';
-    artist.textContent = 'Impossible de lire ce fichier. Vérifie que la musique existe dans le dépôt.';
+    artist.textContent = 'Impossible de lire ce fichier. Vérifie le dossier « musiques ».';
   }
 }
 function loadTrack(i, autoplay=false) {
@@ -346,7 +343,7 @@ audio.addEventListener('timeupdate', () => {
 audio.addEventListener('loadedmetadata', () => timeLabel.textContent = '0:00 / ' + fmt(audio.duration));
 audio.addEventListener('error', () => {
   play.textContent = '▶';
-  artist.textContent = 'Erreur de lecture : la musique est introuvable dans le dépôt.';
+  artist.textContent = 'Erreur de lecture : vérifie que le dossier « musiques » est à côté de index.html.';
 });
 progress.addEventListener('click', e => {
   if (audio.duration) {
@@ -495,11 +492,10 @@ renderTracks();
   }
 
   function getTrackData(src){
-    if (!src) return null;
+    if (!src || !DB[src]) return null;
     if (decoded.has(src)) return decoded.get(src);
     try{
-      const meta = DB[src] || DB['musiques/' + src];
-      if (!meta) return null;
+      const meta = DB[src];
       const raw = atob(meta.data);
       const arr = new Uint8Array(raw.length);
       for(let i=0;i<raw.length;i++) arr[i] = raw.charCodeAt(i);
