@@ -1,1 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zylo — Musique selon ton humeur</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#050505;color:#fff}
+body{overflow-x:hidden;background:
+radial-gradient(circle at 50% -10%,rgba(255,255,255,.13),transparent 32%),
+radial-gradient(circle at 12% 50%,rgba(255,255,255,.035),transparent 28%),
+linear-gradient(145deg,#030303,#111 48%,#050505)}
+body:after{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 50% 45%,transparent 0 38%,rgba(255,255,255,.025) 62%,transparent 72%);filter:blur(18px)}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+.top{width:min(1180px,92%);margin:0 auto;padding:28px 0 12px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{font-size:28px;font-weight:900;letter-spacing:-1px}.logo span{opacity:.5}
+.nav{display:flex;gap:10px;align-items:center}.nav a,.pill{padding:10px 14px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.03);color:#ddd;font-size:13px}
+.nav a:hover,.pill:hover{background:rgba(255,255,255,.08)}
+.hero{width:min(1180px,92%);margin:56px auto 28px;text-align:center}
+.hero h1{font-size:clamp(42px,7vw,82px);line-height:.95;margin:0;letter-spacing:-4px}
+.hero p{margin:18px auto 0;max-width:620px;color:#9d9d9d;font-size:16px}
+.search{margin:26px auto 0;max-width:620px;position:relative}
+.search input{width:100%;padding:15px 18px;border-radius:18px;border:1px solid rgba(255,255,255,.09);outline:0;background:rgba(255,255,255,.055);color:#fff}
+.search input::placeholder{color:#747474}.search input:focus{border-color:rgba(255,255,255,.25);box-shadow:0 0 30px rgba(255,255,255,.05)}
+.section{width:min(1180px,92%);margin:34px auto}
+.section-title{display:flex;align-items:end;justify-content:space-between;margin-bottom:15px}.section-title h2{margin:0;font-size:22px}.section-title span{color:#6f6f6f;font-size:12px}
+.moods{display:flex;gap:12px;overflow-x:auto;padding:7px 4px 12px;scrollbar-width:thin}
+.mood{flex:0 0 170px;height:90px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));color:#fff;padding:16px;text-align:left;transition:.2s;position:relative;overflow:hidden}
+.mood:before{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-25px;top:-35px;background:rgba(255,255,255,.09);filter:blur(7px)}
+.mood:hover,.mood.active{transform:translateY(-2px);border-color:rgba(255,255,255,.2);background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.04))}
+.mood strong{display:block;font-size:16px}.mood small{display:block;margin-top:6px;color:#858585}
+.tracks{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.track{display:flex;align-items:center;gap:12px;padding:13px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.035);transition:.2s}
+.track:hover{background:rgba(255,255,255,.065);border-color:rgba(255,255,255,.14)}
+.track.playing{box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 10px 28px rgba(0,0,0,.25)}
+.art{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#1a1a1a,#343434);font-weight:800;color:#d8d8d8;flex:0 0 auto}
+.meta{min-width:0;flex:1}.meta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}.meta small{display:block;color:#737373;margin-top:4px}
+.play{width:38px;height:38px;border:0;border-radius:50%;background:#fff;color:#111;flex:0 0 auto;font-weight:800}.play:hover{transform:scale(1.04)}
+.empty{padding:30px;text-align:center;color:#777;border:1px dashed rgba(255,255,255,.1);border-radius:18px}
+.player{position:sticky;bottom:16px;width:min(900px,92%);margin:34px auto 24px;padding:13px 15px;border:1px solid rgba(255,255,255,.1);border-radius:22px;background:rgba(10,10,10,.82);backdrop-filter:blur(16px);box-shadow:0 18px 50px rgba(0,0,0,.35);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:15px}
+.now{min-width:0}.now b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.now small{color:#707070}
+.controls{display:flex;align-items:center;justify-content:center;gap:8px}.controls button{border:0;background:rgba(255,255,255,.07);color:#fff;width:34px;height:34px;border-radius:50%}.controls button.main{background:#fff;color:#111;width:40px;height:40px}
+.progress{position:absolute;left:15px;right:15px;bottom:5px;height:3px;border-radius:99px;background:#242424;cursor:pointer;overflow:hidden}.progress i{display:block;height:100%;width:0;background:#fff}
+footer{width:min(1180px,92%);margin:0 auto 100px;padding-top:22px;color:#565656;font-size:12px;text-align:center}
+@media(max-width:700px){.top{padding-top:18px}.nav a{display:none}.hero{margin-top:40px}.player{grid-template-columns:1fr auto}.controls{grid-column:1/-1;grid-row:2}.now{max-width:70vw}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo">Zylo<span>.</span></div>
+  <nav class="nav"><a href="#moods">Humeurs</a><a href="#tracks">Musiques</a></nav>
+</header>
 
+<main>
+<section class="hero">
+  <h1>Ta musique.<br>Ton humeur.</h1>
+  <p>Choisis une ambiance et lance directement une musique. Pas besoin de chercher pendant des heures.</p>
+  <div class="search"><input id="search" type="search" placeholder="Rechercher une musique ou une catégorie..."></div>
+</section>
+
+<section class="section" id="moods">
+  <div class="section-title"><h2>Choisis ton humeur</h2><span>défile horizontalement →</span></div>
+  <div class="moods" id="moodList"></div>
+</section>
+
+<section class="section" id="tracks">
+  <div class="section-title"><h2 id="listTitle">Toutes les musiques</h2><span id="count"></span></div>
+  <div class="tracks" id="trackList"></div>
+</section>
+
+<div class="player">
+  <div class="now"><b id="nowTitle">Aucune musique</b><small id="nowCategory">Choisis un morceau</small></div>
+  <div class="controls">
+    <button id="prev" title="Précédente">‹</button>
+    <button class="main" id="toggle" title="Lecture">▶</button>
+    <button id="next" title="Suivante">›</button>
+  </div>
+  <div></div>
+  <div class="progress" id="progress"><i id="bar"></i></div>
+</div>
+</main>
+<footer>Zylo — musique selon ton humeur</footer>
+
+<audio id="audio" preload="metadata"></audio>
+<script>
+const playlists = {
+  "Chill":[
+    ["Jiandro, ola.wav - Confess Your Love.mp3","Confess Your Love"],
+    ["Julian Mendez - Luigi - Slowed + Reverb 7 Weeks & 3 Days Remix.mp3","Luigi - Slowed + Reverb"],
+    ["Sub Urban - Cradles.mp3","Cradles"],
+    ["joyful - frog (slowed).mp3","frog (slowed)"],
+    ["mikeeysmind - After Dark x Sweater Weather.mp3","After Dark x Sweater Weather"],
+    ["ptasinski, RJ Pasin - life force.mp3","life force"]
+  ],
+  "Chill 2":[
+    ["7 weeks & 3 days - Insturmental(1).mp3","7 weeks & 3 days - Instrumental"],
+    ["NyxTheShield - Finale!_.m4a","Finale!"],
+    ["The Living Tombstone - My Ordinary Life.mp3","My Ordinary Life"],
+    ["did i tell u that i miss u.mp3","did i tell u that i miss u"],
+    ["purple drip boy - Assumptions.mp3","Assumptions"]
+  ],
+  "Énergique":[
+    ["AWAKE.mp3","AWAKE"],
+    ["Crush x Burnt Rice - Slowed + Reverb.mp3","Crush x Burnt Rice"],
+    ["DRIFT.mp3","DRIFT"],
+    ["When I Grow Up.mp3","When I Grow Up"],
+    ["poster boy.mp3","poster boy"]
+  ],
+  "Rap Anime":[
+    ["Zoro L'Fr_rot - Sung Jin Woo.mp3","Sung Jin Woo"],
+    ["Zoro L'Fr_rot - Yuta.mp3","Yuta"]
+  ]
+};
+
+const moods = [
+  ["Tout","Toutes les musiques"],
+  ["Chill","Chill"],
+  ["Chill 2","Chill 2"],
+  ["Énergique","Énergique"],
+  ["Rap Anime","Rap Anime"]
+];
+
+const moodList=document.getElementById("moodList");
+const trackList=document.getElementById("trackList");
+const title=document.getElementById("listTitle");
+const count=document.getElementById("count");
+const search=document.getElementById("search");
+const audio=document.getElementById("audio");
+const toggle=document.getElementById("toggle");
+const nowTitle=document.getElementById("nowTitle");
+const nowCategory=document.getElementById("nowCategory");
+const bar=document.getElementById("bar");
+const progress=document.getElementById("progress");
+let activeMood="Tout", filtered=[], current=-1;
+
+Object.entries(playlists).forEach(([cat,items])=>items.forEach(x=>filtered.push({...x,cat})));
+
+moods.forEach(([key,label])=>{
+  const b=document.createElement("button");
+  b.className="mood"+(key==="Tout"?" active":"");
+  b.dataset.key=key;
+  b.innerHTML="<strong>"+label+"</strong><small>"+(key==="Tout"?"Tout écouter":(playlists[key]?.length||0)+" titres")+"</small>";
+  b.onclick=()=>{activeMood=key;document.querySelectorAll(".mood").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()};
+  moodList.appendChild(b);
+});
+
+function makeUrl(cat,file){return encodeURI(cat+"/"+file)}
+function getList(){
+  let list=activeMood==="Tout"?filtered:filtered.filter(x=>x.cat===activeMood);
+  const q=search.value.trim().toLowerCase();
+  if(q) list=list.filter(x=>(x[1]+" "+x.cat+" "+x[0]).toLowerCase().includes(q));
+  return list;
+}
+function render(){
+  const list=getList();
+  trackList.innerHTML="";
+  title.textContent=activeMood==="Tout"?"Toutes les musiques":activeMood;
+  count.textContent=list.length+" titre"+(list.length>1?"s":"");
+  if(!list.length){trackList.innerHTML='<div class="empty">Aucune musique trouvée.</div>';return}
+  list.forEach((x,i)=>{
+    const card=document.createElement("div");
+    card.className="track"+(x===filtered[current]?" playing":"");
+    card.innerHTML='<div class="art">'+(i+1)+'</div><div class="meta"><b>'+escapeHtml(x[1])+'</b><small>'+escapeHtml(x.cat)+'</small></div><button class="play" aria-label="Lire">▶</button>';
+    card.querySelector(".play").onclick=()=>playItem(x);
+    card.onclick=e=>{if(e.target.tagName!=="BUTTON")playItem(x)};
+    trackList.appendChild(card);
+  });
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function playItem(item){
+  current=filtered.indexOf(item);
+  audio.src=makeUrl(item.cat,item[0]);
+  audio.play().then(()=>{toggle.textContent="❚❚"}).catch(()=>{});
+  nowTitle.textContent=item[1];
+  nowCategory.textContent=item.cat;
+  render();
+}
+function playCurrentList(){
+  const list=getList();
+  if(!list.length)return;
+  if(current<0)playItem(list[0]);else playItem(filtered[current]);
+}
+toggle.onclick=()=>{if(!audio.src)return playCurrentList();if(audio.paused){audio.play();toggle.textContent="❚❚"}else{audio.pause();toggle.textContent="▶"}};
+document.getElementById("prev").onclick=()=>{if(current<0)return playCurrentList();const i=(current-1+filtered.length)%filtered.length;playItem(filtered[i])};
+document.getElementById("next").onclick=()=>{if(current<0)return playCurrentList();const i=(current+1)%filtered.length;playItem(filtered[i])};
+audio.onplay=()=>toggle.textContent="❚❚";
+audio.onpause=()=>toggle.textContent="▶";
+audio.onended=()=>{const i=(current+1)%filtered.length;playItem(filtered[i])};
+audio.ontimeupdate=()=>{if(audio.duration)bar.style.width=(audio.currentTime/audio.duration*100)+"%"};
+progress.onclick=e=>{if(!audio.duration)return;const r=progress.getBoundingClientRect();audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration};
+search.oninput=render;
+render();
+</script>
+</body>
+</html>
